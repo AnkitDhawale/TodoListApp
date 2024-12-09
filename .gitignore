@@ -1,0 +1,3 @@
+# ignore unnecessary changes
+.DS_*
+.idea

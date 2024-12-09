@@ -1,0 +1,524 @@
+{
+	"info": {
+		"_postman_id": "06792862-afa5-4217-bf06-a5b91a90032b",
+		"name": "Todo App",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "18733953"
+	},
+	"item": [
+		{
+			"name": "Tasks",
+			"item": [
+				{
+					"name": "getAllTasksOfAUser",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{todo_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/todoapp/tasks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"todoapp",
+								"tasks"
+							]
+						}
+					},
+					"response": [
+						{
+							"name": "sample",
+							"originalRequest": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:8888/todoapp/tasks",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "8888",
+									"path": [
+										"todoapp",
+										"tasks"
+									]
+								}
+							},
+							"status": "OK",
+							"code": 200,
+							"_postman_previewlanguage": "json",
+							"header": [
+								{
+									"key": "Content-Type",
+									"value": "application/json"
+								},
+								{
+									"key": "Date",
+									"value": "Sun, 08 Dec 2024 17:20:47 GMT"
+								},
+								{
+									"key": "Content-Length",
+									"value": "862"
+								}
+							],
+							"cookie": [],
+							"body": "{\n    \"data\": [\n        {\n            \"task_id\": \"112ae328-a2da-4560-8934-c4f63f376911\",\n            \"title\": \"Go to gym\",\n            \"description\": \"health conscious\",\n            \"due_date\": \"2024-12-10T18:46:00Z\",\n            \"priority\": \"Low\",\n            \"category\": \"GYM\",\n            \"status\": \"Pending\",\n            \"created_at\": \"2024-12-07T20:39:26.324988Z\",\n            \"updated_at\": \"2024-12-07T20:39:26.324988Z\"\n        },\n        {\n            \"task_id\": \"332ae328-a2da-4560-8934-c4f63f376933\",\n            \"title\": \"Eat diet\",\n            \"description\": \"body maintenance\",\n            \"due_date\": \"2024-12-10T18:48:00Z\",\n            \"priority\": \"Medium\",\n            \"category\": \"GYM\",\n            \"status\": \"Completed\",\n            \"created_at\": \"2024-12-07T20:39:26.324988Z\",\n            \"updated_at\": \"2024-12-07T20:39:26.324988Z\"\n        },\n        {\n            \"task_id\": \"1d789d82-aa71-4b02-8b76-a776c8fe2622\",\n            \"title\": \"Post Go to gym\",\n            \"description\": \"Post health conscious\",\n            \"due_date\": \"2024-12-11T18:46:00Z\",\n            \"priority\": \"High\",\n            \"category\": \"Post GYM\",\n            \"status\": \"Pending\",\n            \"created_at\": \"2024-12-08T16:22:48.701696Z\",\n            \"updated_at\": \"2024-12-08T16:22:48.701696Z\"\n        }\n    ]\n}"
+						}
+					]
+				},
+				{
+					"name": "CreateNewTask",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{todo_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Doctor visit\",\n    \"description\": \"Health checkup\",\n    \"due_date\": \"2024-12-19 19:11:00\",\n    \"priority\": \"High\",\n    \"category\": \"Personal\",\n    \"status\": \"Pending\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/todoapp/tasks",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"todoapp",
+								"tasks"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "UpdateTask",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{todo_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PUT",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"title\": \"Doctor visit\",\n    \"description\": \"Health checkup\",\n    \"due_date\": \"2024-12-19 19:11:00\",\n    \"priority\": \"High\",\n    \"category\": \"Personal\",\n    \"status\": \"Pending\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/todoapp/tasks/472939ec-8b5d-430d-a1cd-ec6cedcdfc50",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"todoapp",
+								"tasks",
+								"472939ec-8b5d-430d-a1cd-ec6cedcdfc50"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "delete a task",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{todo_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "DELETE",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/todoapp/tasks/383857d4-d36c-4f60-a7fb-12bed5baf658",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"todoapp",
+								"tasks",
+								"383857d4-d36c-4f60-a7fb-12bed5baf658"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "viewTasksWithoutFilters",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{todo_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/todoapp/tasks/view",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"todoapp",
+								"tasks",
+								"view"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "viewTasksWithSomeFilters",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{todo_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/todoapp/tasks/view?priority=High&status=Completed&category=Personal",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"todoapp",
+								"tasks",
+								"view"
+							],
+							"query": [
+								{
+									"key": "due_date",
+									"value": "2024-12-15",
+									"disabled": true
+								},
+								{
+									"key": "priority",
+									"value": "High"
+								},
+								{
+									"key": "status",
+									"value": "Completed"
+								},
+								{
+									"key": "category",
+									"value": "Personal"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "viewTasksWithSomeFilters Copy",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{todo_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/todoapp/tasks/view?status=Completed&category=Personal",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"todoapp",
+								"tasks",
+								"view"
+							],
+							"query": [
+								{
+									"key": "due_date",
+									"value": "2024-12-15",
+									"disabled": true
+								},
+								{
+									"key": "priority",
+									"value": "High",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "Completed"
+								},
+								{
+									"key": "category",
+									"value": "Personal"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "viewTasksWithDateFilters",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{todo_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/todoapp/tasks/view?due_date=2024-12-15",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"todoapp",
+								"tasks",
+								"view"
+							],
+							"query": [
+								{
+									"key": "priority",
+									"value": "High",
+									"disabled": true
+								},
+								{
+									"key": "category",
+									"value": "updated anyany",
+									"disabled": true
+								},
+								{
+									"key": "status",
+									"value": "Completed",
+									"disabled": true
+								},
+								{
+									"key": "due_date",
+									"value": "2024-12-15"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "getAllUsers",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{todo_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "http://localhost:8888/todoapp/users/all",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"todoapp",
+								"users",
+								"all"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "signup",
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"login@test.com\",\n    \"password\":\"login@test.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/todoapp/signup",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"todoapp",
+								"signup"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "update user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{todo_access_token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "PATCH",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"login@test.com\",\n    \"password\":\"login@test.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/todoapp/user-update",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"todoapp",
+								"user-update"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "login",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = pm.response.json();",
+									"pm.environment.set(\"todo_access_token\", jsonData[\"data\"][\"access_token\"]);"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n    \"email\":\"login@test.com\",\n    \"password\":\"login@test.com\"\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "http://localhost:8888/todoapp/login",
+							"protocol": "http",
+							"host": [
+								"localhost"
+							],
+							"port": "8888",
+							"path": [
+								"todoapp",
+								"login"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}

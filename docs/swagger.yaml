@@ -1,0 +1,301 @@
+definitions:
+  dto.Task:
+    properties:
+      category:
+        type: string
+      created_at:
+        type: string
+      description:
+        type: string
+      due_date:
+        type: string
+      priority:
+        type: string
+      status:
+        type: string
+      task_id:
+        type: string
+      title:
+        type: string
+      updated_at:
+        type: string
+    type: object
+  dto.TaskInputRequest:
+    properties:
+      category:
+        type: string
+      description:
+        type: string
+      due_date:
+        type: string
+      priority:
+        type: string
+      status:
+        type: string
+      title:
+        type: string
+    required:
+    - title
+    type: object
+  dto.User:
+    properties:
+      email:
+        type: string
+      password:
+        type: string
+    type: object
+  helpers.Response:
+    properties:
+      data: {}
+      error_message:
+        type: string
+    type: object
+info:
+  contact: {}
+paths:
+  /todoapp/login:
+    post:
+      consumes:
+      - application/json
+      description: Authenticates a user and returns a JWT token if credentials are
+        correct
+      parameters:
+      - description: User credentials
+        in: body
+        name: credentials
+        required: true
+        schema:
+          $ref: '#/definitions/dto.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: JWT token
+          schema:
+            $ref: '#/definitions/helpers.Response'
+        "400":
+          description: Invalid request payload
+          schema:
+            $ref: '#/definitions/helpers.Response'
+        "401":
+          description: Wrong email or password
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: User login
+      tags:
+      - auth
+  /todoapp/signup:
+    post:
+      consumes:
+      - application/json
+      description: Creates new user account
+      parameters:
+      - description: User data for signup
+        in: body
+        name: userdata
+        required: true
+        schema:
+          $ref: '#/definitions/dto.User'
+      produces:
+      - application/json
+      responses:
+        "201":
+          description: Success
+          schema:
+            $ref: '#/definitions/helpers.Response'
+        "400":
+          description: email & password should not be empty
+          schema:
+            $ref: '#/definitions/helpers.Response'
+        "500":
+          description: Unexpected error
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: User signup
+      tags:
+      - users
+  /todoapp/tasks:
+    get:
+      description: Fetches all tasks associated with the authenticated user
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of tasks
+          schema:
+            items:
+              $ref: '#/definitions/dto.Task'
+            type: array
+        "500":
+          description: UserId not found in context or server error
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: Get all tasks of a user
+      tags:
+      - tasks
+    post:
+      consumes:
+      - application/json
+      description: Creates a new task for the authenticated user
+      parameters:
+      - description: Task input data
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TaskInputRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: New task created successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload or error while creating task
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: Creates a new task
+      tags:
+      - tasks
+  /todoapp/tasks/{id}:
+    delete:
+      description: Deletes a specific task by its ID
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Task deleted successfully
+          schema:
+            type: string
+        "400":
+          description: Task ID missing or deletion failed
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: Deletes a task
+      tags:
+      - tasks
+    put:
+      consumes:
+      - application/json
+      description: Updates only the provided fields of a specific task
+      parameters:
+      - description: Task ID
+        in: path
+        name: id
+        required: true
+        type: string
+      - description: Task input data
+        in: body
+        name: task
+        required: true
+        schema:
+          $ref: '#/definitions/dto.TaskInputRequest'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Task updated successfully
+          schema:
+            type: string
+        "400":
+          description: Invalid request payload or task ID missing
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: Updates an existing task
+      tags:
+      - tasks
+  /todoapp/tasks/view:
+    get:
+      description: Fetches tasks with optional filtering by due date, priority, category,
+        and status
+      parameters:
+      - description: 'Filter tasks by due date (format: YYYY-MM-DD)'
+        in: query
+        name: due_date
+        type: string
+      - description: Filter tasks by priority (e.g., Low, Medium, High)
+        in: query
+        name: priority
+        type: string
+      - description: Filter tasks by category
+        in: query
+        name: category
+        type: string
+      - description: Filter tasks by status (e.g., Pending, Completed)
+        in: query
+        name: status
+        type: string
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Filtered list of tasks
+          schema:
+            items:
+              $ref: '#/definitions/dto.Task'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: View tasks with filter options
+      tags:
+      - tasks
+  /todoapp/user-update:
+    patch:
+      consumes:
+      - application/json
+      description: Updates an user account
+      parameters:
+      - description: User data for update
+        in: body
+        name: userdata
+        required: true
+        schema:
+          $ref: '#/definitions/dto.User'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: Success update
+          schema:
+            $ref: '#/definitions/helpers.Response'
+        "400":
+          description: email & password should not be empty/at least 1 field required
+            to update profile
+          schema:
+            $ref: '#/definitions/helpers.Response'
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: User update
+      tags:
+      - users
+  /todoapp/users/all:
+    get:
+      description: Fetches all users from db
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: List of all users
+          schema:
+            items:
+              $ref: '#/definitions/helpers.Response'
+            type: array
+        "500":
+          description: Internal server error
+          schema:
+            $ref: '#/definitions/helpers.Response'
+      summary: Get all users
+      tags:
+      - users
+swagger: "2.0"
