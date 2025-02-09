@@ -1,0 +1,21 @@
+name: Main
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  call-unit-test:
+    name: Call unit tests
+    uses: ./.github/workflows/unit_tests.yml
+    secrets: inherit
+
+  call-build-and-push:
+    name: Build image & push it to dockerhub.
+    needs: call-unit-test
+    uses: ./.github/workflows/build_and_push.yml
+    secrets: inherit

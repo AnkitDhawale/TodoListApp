@@ -1,6 +1,8 @@
 package app
 
 import (
+	"database/sql"
+	"fmt"
 	_ "github.com/AnkitDhawale/TodoListApp/docs"
 	"github.com/AnkitDhawale/TodoListApp/handlers"
 	"github.com/AnkitDhawale/TodoListApp/helpers"
@@ -10,7 +12,7 @@ import (
 	"github.com/go-chi/chi/v5"
 	chiMW "github.com/go-chi/chi/v5/middleware"
 	"github.com/go-playground/validator/v10"
-	"github.com/jackc/pgx"
+	_ "github.com/lib/pq"
 	httpSwagger "github.com/swaggo/http-swagger"
 	"log"
 	"net/http"
@@ -23,7 +25,7 @@ import (
 // @host localhost:8888
 // @BasePath /
 
-var dbClient *pgx.Conn
+var dbClient *sql.DB
 var validate *validator.Validate
 
 func Start() {
@@ -76,21 +78,55 @@ func Start() {
 	})
 
 	log.Println("Server started on localhost:8888...")
-	log.Fatal(http.ListenAndServe(":8888", router))
+	log.Fatal(http.ListenAndServe(":8080", router))
 }
 
-// keeep it in repo
-func createDatabaseConnection() *pgx.Conn {
-	config := pgx.ConnConfig{
-		Host:     os.Getenv("DB_HOSTNAME"),
-		Database: os.Getenv("DB_NAME"),
-		User:     os.Getenv("DB_USERNAME"),
-		Password: os.Getenv("DB_PASSWORD"),
-	}
-	conn, err := pgx.Connect(config)
-	if err != nil {
-		log.Fatalf("unable to establish db connection, err %v", err)
+func createDatabaseConnection() *sql.DB {
+	/*
+		Using PostgreSQL driver and toolkit for Go: "github.com/jackc/pgx/v4"
+			config := pgx.ConnConfig{
+				Host:     os.Getenv("DB_HOSTNAME"),
+				Database: os.Getenv("DB_NAME"),
+				User:     os.Getenv("DB_USERNAME"),
+				Password: os.Getenv("DB_PASSWORD"),
+			}
+			conn, err := pgx.Connect(config)
+			if err != nil {
+				log.Fatalf("unable to establish db connection, err %v", err)
+			}
+			return conn
+
+			connStr := "postgres://username:password@host/dbname?sslmode=verify-full"
+			db, err := sql.Open("postgres", connStr)
+	*/
+
+	host := os.Getenv("DB_HOSTNAME")
+	user := os.Getenv("DB_USERNAME")
+	password := os.Getenv("DB_PASSWORD")
+	dbname := os.Getenv("DB_NAME")
+	port := os.Getenv("DB_PORT")
+
+	// Ensure no variable is empty
+	if host == "" || port == "" || user == "" || password == "" || dbname == "" {
+		log.Fatal("One or more required database env variables are missing")
 	}
 
-	return conn
+	connectionString := fmt.Sprintf("host=%s port=%s user=%s "+
+		"password=%s dbname=%s sslmode=disable", host, port, user, password, dbname)
+
+	db, err := sql.Open("postgres", connectionString)
+	if err != nil {
+		log.Println("err while db connection: ", err)
+		panic(err)
+	}
+
+	err = db.Ping()
+	if err != nil {
+		log.Println("err while ping: ", err)
+		panic(err)
+	}
+
+	log.Println("Woooohhhhooooooo ... Successfully connected to DB")
+
+	return db
 }

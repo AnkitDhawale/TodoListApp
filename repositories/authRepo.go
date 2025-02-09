@@ -3,10 +3,16 @@ package repositories
 import (
 	"database/sql"
 	"errors"
-	"fmt"
 	"github.com/AnkitDhawale/TodoListApp/domains"
 	"github.com/AnkitDhawale/TodoListApp/dto"
-	"github.com/jackc/pgx"
+	"log"
+)
+
+// ErrInvalidCredentials defines a global error for consistent comparison
+var (
+	ErrInvalidCredentials = errors.New("invalid credentials")
+	ErrInvalidEmail       = errors.New("invalid email")
+	ErrUnexpected         = errors.New("unexpected database error")
 )
 
 type AuthRepo interface {
@@ -15,10 +21,10 @@ type AuthRepo interface {
 }
 
 type AuthRepoDb struct {
-	dbClient *pgx.Conn
+	dbClient *sql.DB
 }
 
-func NewAuthRepoDb(db *pgx.Conn) AuthRepoDb {
+func NewAuthRepoDb(db *sql.DB) AuthRepoDb {
 	return AuthRepoDb{dbClient: db}
 }
 
@@ -30,10 +36,11 @@ func (auth AuthRepoDb) FindUserBy(user *dto.User) (*domains.User, error) {
 		Scan(&usr.Id, &usr.Email, &usr.PasswordHash, &usr.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, errors.New("invalid credentials")
-		} else {
-			return nil, fmt.Errorf("unexpected database error: %v", err)
+			return nil, ErrInvalidCredentials
 		}
+
+		log.Println("unexpected database error: %w", err)
+		return nil, ErrUnexpected
 	}
 
 	return &usr, nil
@@ -47,9 +54,10 @@ func (auth AuthRepoDb) FindByEmail(email string) (*domains.User, error) {
 		Scan(&usr.Id, &usr.Email, &usr.PasswordHash, &usr.CreatedAt)
 	if err != nil {
 		if errors.Is(err, sql.ErrNoRows) {
-			return nil, errors.New("invalid email")
+			return nil, ErrInvalidEmail
 		} else {
-			return nil, fmt.Errorf("unexpected database error: %v", err)
+			log.Println("unexpected database error: %w", err)
+			return nil, ErrUnexpected
 		}
 	}
 

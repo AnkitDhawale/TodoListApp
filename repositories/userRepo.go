@@ -1,17 +1,17 @@
 package repositories
 
 import (
+	"database/sql"
 	"fmt"
 	"github.com/AnkitDhawale/TodoListApp/domains"
-	"github.com/jackc/pgx"
 	"log"
 )
 
 type UserRepoDb struct {
-	dbClient *pgx.Conn
+	dbClient *sql.DB
 }
 
-func NewUserRepoDb(db *pgx.Conn) UserRepoDb {
+func NewUserRepoDb(db *sql.DB) UserRepoDb {
 	return UserRepoDb{dbClient: db}
 }
 
@@ -51,11 +51,18 @@ func (u UserRepoDb) AddUser(user *domains.User) (string, error) {
 			  VALUES ($1, $2, $3, $4)`
 
 	res, err := u.dbClient.Exec(query, user.Id, user.Email, &user.PasswordHash, &user.CreatedAt)
-	if err != nil && res.RowsAffected() == 0 {
+	if err != nil {
 		log.Println("failed to create a user, err: ", err)
 		return "", err
 	}
-	log.Println(res.RowsAffected())
+
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		log.Println("failed to create a user, err: ", err)
+		return "", err
+	}
+
+	log.Println(affectedRows)
 
 	return user.Id, nil
 }
@@ -66,7 +73,7 @@ func (u UserRepoDb) UpdateUser(userIdFromToken string, user *domains.User) error
 	updateEmailQuery := `UPDATE users SET email = $1 WHERE id = $2`
 	updatePasswordQuery := `UPDATE users SET password_hash = $1 WHERE id = $2`
 
-	var res pgx.CommandTag
+	var res sql.Result
 
 	switch {
 	case user.Email != "" && user.PasswordHash == "":
@@ -80,10 +87,18 @@ func (u UserRepoDb) UpdateUser(userIdFromToken string, user *domains.User) error
 		res, err = u.dbClient.Exec(updateQuery, user.Email, user.PasswordHash, userIdFromToken)
 	}
 
-	if err != nil && res.RowsAffected() == 0 {
+	if err != nil {
 		log.Println("failed to update user, err: ", err)
 		return err
 	}
+
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		log.Println("failed to create a user, err: ", err)
+		return err
+	}
+
+	log.Println(affectedRows)
 
 	return nil
 }

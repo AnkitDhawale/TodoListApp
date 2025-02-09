@@ -1,8 +1,8 @@
 package helpers
 
 import (
+	"database/sql"
 	"github.com/AnkitDhawale/TodoListApp/domains"
-	"github.com/jackc/pgx"
 	"github.com/pkg/errors"
 )
 
@@ -11,10 +11,10 @@ type Resolver interface {
 }
 
 type UserResolver struct {
-	DbClient *pgx.Conn
+	DbClient *sql.DB
 }
 
-func NewUserResolver(db *pgx.Conn) *UserResolver {
+func NewUserResolver(db *sql.DB) *UserResolver {
 	return &UserResolver{DbClient: db}
 }
 

@@ -4,15 +4,14 @@ import (
 	"database/sql"
 	"errors"
 	"github.com/AnkitDhawale/TodoListApp/domains"
-	"github.com/jackc/pgx"
 	"log"
 )
 
 type TaskRepoDb struct {
-	DbClient *pgx.Conn
+	DbClient *sql.DB
 }
 
-func NewTaskRepoDb(dbClient *pgx.Conn) *TaskRepoDb {
+func NewTaskRepoDb(dbClient *sql.DB) *TaskRepoDb {
 	return &TaskRepoDb{DbClient: dbClient}
 }
 
@@ -66,11 +65,18 @@ func (t TaskRepoDb) CreateNewTask(task *domains.Task) (string, error) {
 		task.CreatedAt,
 		task.UpdatedAt,
 	)
-	if err != nil && res.RowsAffected() == 0 {
+	if err != nil {
 		return "", err
 	}
 
-	log.Println(res.RowsAffected())
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		log.Println("failed to create a task, err: ", err)
+		return "", err
+	}
+
+	log.Println(affectedRows)
+
 	return task.Id, nil
 }
 
@@ -95,9 +101,17 @@ func (t TaskRepoDb) UpdateTask(task *domains.Task) error {
 		task.UpdatedAt,
 		task.Id,
 	)
-	if err != nil && res.RowsAffected() == 0 {
+	if err != nil {
 		return err
 	}
+
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		log.Println("failed to create a task, err: ", err)
+		return err
+	}
+
+	log.Println(affectedRows)
 
 	return nil
 }
@@ -105,9 +119,18 @@ func (t TaskRepoDb) UpdateTask(task *domains.Task) error {
 func (t TaskRepoDb) DeleteTask(id string) error {
 	query := `DELETE FROM tasks WHERE id = $1`
 	res, err := t.DbClient.Exec(query, id)
-	if err != nil && res.RowsAffected() == 0 {
+	if err != nil {
 		return err
 	}
+
+	affectedRows, err := res.RowsAffected()
+	if err != nil {
+		log.Println("failed to create a task, err: ", err)
+		return err
+	}
+
+	log.Println(affectedRows)
+
 	return nil
 }
 
@@ -144,7 +167,7 @@ func (t TaskRepoDb) FindTaskByFilter(query string, values ...any) ([]domains.Tas
 		return nil, err
 	}
 	defer rows.Close()
-	
+
 	var tasks []domains.Task
 	var task domains.Task
 	for rows.Next() {

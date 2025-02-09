@@ -43,7 +43,7 @@ func (th TaskHandler) GetAllTasksOfAUser(w http.ResponseWriter, r *http.Request)
 		return
 	}
 	if len(tasks) == 0 {
-		helpers.WriteResponse(w, http.StatusOK, nil, nil)
+		helpers.WriteResponse(w, http.StatusNoContent, []dto.Task{}, nil)
 		return
 	} else {
 		helpers.WriteResponse(w, http.StatusOK, tasks, nil)
