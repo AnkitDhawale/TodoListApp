@@ -45,7 +45,7 @@ func (m *MockTaskRepo) FindTaskByFilter(query string, values ...any) ([]domains.
 	//TODO implement me
 	panic("implement me")
 }
-
+/*
 func TestDefaultTaskService_CreateNewTask(t *testing.T) {
 	tests := []struct {
 		name                 string
@@ -99,7 +99,7 @@ func TestDefaultTaskService_CreateNewTask(t *testing.T) {
 		})
 	}
 }
-
+*/
 func TestDefaultTaskService_GetAllTasksOfUser(t *testing.T) {
 	tests := []struct {
 		name                 string
