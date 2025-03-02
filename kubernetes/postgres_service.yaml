@@ -1,0 +1,14 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: postgres-service
+  labels:
+    app: postgresDb  # Keep this consistent
+spec:
+  type: NodePort  # Change from NodePort to ClusterIP (NodePort is not needed)
+  selector:
+    app: postgresDb  # FIXED: Now matches Deployment label
+  ports:
+    - protocol: TCP
+      port: 5432
+      targetPort: 5432

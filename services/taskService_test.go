@@ -45,60 +45,61 @@ func (m *MockTaskRepo) FindTaskByFilter(query string, values ...any) ([]domains.
 	//TODO implement me
 	panic("implement me")
 }
+
 /*
-func TestDefaultTaskService_CreateNewTask(t *testing.T) {
-	tests := []struct {
-		name                 string
-		userIDFromTokenInput string
-		taskInput            *dto.Task
-		expectedResult       string
-		expectedError        error
-	}{
-		{
-			name:                 "Success",
-			userIDFromTokenInput: "0451ff67-df6f-463b-9e35-b6dabe0e8a55",
-			taskInput: &dto.Task{
-				Title:       "Fitness",
-				Description: "Stay healthy and fit with gym",
-				DueDate:     time.Time{},
-				Priority:    "High",
-				Category:    "GYM",
-				Status:      "Pending",
-				CreatedAt:   time.Time{},
-				UpdatedAt:   time.Time{},
+	func TestDefaultTaskService_CreateNewTask(t *testing.T) {
+		tests := []struct {
+			name                 string
+			userIDFromTokenInput string
+			taskInput            *dto.Task
+			expectedResult       string
+			expectedError        error
+		}{
+			{
+				name:                 "Success",
+				userIDFromTokenInput: "0451ff67-df6f-463b-9e35-b6dabe0e8a55",
+				taskInput: &dto.Task{
+					Title:       "Fitness",
+					Description: "Stay healthy and fit with gym",
+					DueDate:     time.Time{},
+					Priority:    "High",
+					Category:    "GYM",
+					Status:      "Pending",
+					CreatedAt:   time.Time{},
+					UpdatedAt:   time.Time{},
+				},
+				expectedResult: "1211ff67-df6f-463b-9e35-b6dabe0e8a99",
+				expectedError:  nil,
 			},
-			expectedResult: "1211ff67-df6f-463b-9e35-b6dabe0e8a99",
-			expectedError:  nil,
-		},
+		}
+
+		for _, tt := range tests {
+			t.Run(tt.name, func(t *testing.T) {
+				mockTaskRepo := new(MockTaskRepo)
+				taskService := NewDefaultTaskService(mockTaskRepo)
+
+				newTask := domains.Task{
+					Id:          "1211ff67-df6f-463b-9e35-b6dabe0e8a99",
+					UserId:      tt.userIDFromTokenInput,
+					Title:       tt.taskInput.Title,
+					Description: tt.taskInput.Description,
+					DueDate:     tt.taskInput.DueDate,
+					Priority:    tt.taskInput.Priority,
+					Category:    tt.taskInput.Category,
+					Status:      tt.taskInput.Status,
+					CreatedAt:   tt.taskInput.CreatedAt,
+					UpdatedAt:   tt.taskInput.UpdatedAt,
+				}
+
+				mockTaskRepo.On("CreateNewTask", &newTask).Return(tt.expectedResult, nil)
+				res, err := taskService.CreateNewTask(tt.userIDFromTokenInput, tt.taskInput)
+
+				assert.Equal(t, tt.expectedResult, res)
+				assert.NoError(t, err)
+				mockTaskRepo.AssertExpectations(t)
+			})
+		}
 	}
-
-	for _, tt := range tests {
-		t.Run(tt.name, func(t *testing.T) {
-			mockTaskRepo := new(MockTaskRepo)
-			taskService := NewDefaultTaskService(mockTaskRepo)
-
-			newTask := domains.Task{
-				Id:          "1211ff67-df6f-463b-9e35-b6dabe0e8a99",
-				UserId:      tt.userIDFromTokenInput,
-				Title:       tt.taskInput.Title,
-				Description: tt.taskInput.Description,
-				DueDate:     tt.taskInput.DueDate,
-				Priority:    tt.taskInput.Priority,
-				Category:    tt.taskInput.Category,
-				Status:      tt.taskInput.Status,
-				CreatedAt:   tt.taskInput.CreatedAt,
-				UpdatedAt:   tt.taskInput.UpdatedAt,
-			}
-
-			mockTaskRepo.On("CreateNewTask", &newTask).Return(tt.expectedResult, nil)
-			res, err := taskService.CreateNewTask(tt.userIDFromTokenInput, tt.taskInput)
-
-			assert.Equal(t, tt.expectedResult, res)
-			assert.NoError(t, err)
-			mockTaskRepo.AssertExpectations(t)
-		})
-	}
-}
 */
 func TestDefaultTaskService_GetAllTasksOfUser(t *testing.T) {
 	tests := []struct {

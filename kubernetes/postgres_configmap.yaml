@@ -1,0 +1,10 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: postgres-config
+  labels:
+    app: postgresDb  # FIXED: Matches PostgreSQL Deployment & Service
+data:
+  POSTGRES_DB: "todo_app_db"
+  POSTGRES_USER: "ankit"
+  POSTGRES_PASSWORD: "app123"
